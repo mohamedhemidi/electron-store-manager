@@ -11,14 +11,17 @@ const createWindow = () => {
     width: 1000,
     height: 600,
     webPreferences: {
+      contextIsolation: true,
+      nodeIntegration: false,
       preload: path.join(__dirname, 'preload.js'),
     },
   });
 
   // and load the index.html of the app.
-  //   mainWindow.loadFile('./app/dist/index.html');
+  // mainWindow.loadFile('./app/dist/index.html');
 
-  mainWindow.loadURL('http://localhost:5173/');
+  // mainWindow.loadURL('http://localhost:5173/');
+  mainWindow.loadFile('index.html');
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();

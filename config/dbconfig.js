@@ -14,5 +14,6 @@ async function initializeDatabase() {
 }
 
 module.exports = {
+  models,
   initializeDatabase,
 };
