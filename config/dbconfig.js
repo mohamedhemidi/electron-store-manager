@@ -1,53 +1,13 @@
 const path = require('path');
-const {DataTypes, Sequelize} = require('sequelize');
-const { v4: uuidv4 } = require('uuid');
+const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize({
   dialect: 'sqlite',
-  storage: path.join(__dirname, '../database/main.sqlite'),
+  storage: path.join(__dirname, '../db/database.sqlite'),
 });
+exports.sequelize = sequelize;
 
-const Order = sequelize.define('orders', {
-  id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4, // Automatically generate a UUIDV4
-    primaryKey: true,
-    allowNull: false
-  },
-  client_Id: {
-    type: DataTypes.UUIDV4,
-    allowNull: true,
-  },
-  client_name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  weight: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
-  price: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
-});
-const Client = sequelize.define('clients', {
-  id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4, // Automatically generate a UUIDV4
-    primaryKey: true,
-    allowNull: false
-  },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-});
-
-Client.hasMany(Order);
-Order.belongsTo(Client);
+const models = require('../models');
 
 async function initializeDatabase() {
   await sequelize.sync();
@@ -55,8 +15,4 @@ async function initializeDatabase() {
 
 module.exports = {
   initializeDatabase,
-  models: {
-    Order,
-    Client,
-  },
 };
