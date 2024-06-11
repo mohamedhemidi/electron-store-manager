@@ -1,9 +1,11 @@
 // main.js
 
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('node:path');
 const { initializeDatabase } = require('./config/dbconfig');
+const os = require('os');
+const createClient = require('./services/clients/CreateClient');
 
 const createWindow = () => {
   // Create the browser window.
@@ -12,6 +14,7 @@ const createWindow = () => {
     height: 600,
     webPreferences: {
       contextIsolation: true,
+      sandbox: true,
       nodeIntegration: false,
       preload: path.join(__dirname, 'preload.js'),
     },
@@ -20,8 +23,8 @@ const createWindow = () => {
   // and load the index.html of the app.
   // mainWindow.loadFile('./app/dist/index.html');
 
-  // mainWindow.loadURL('http://localhost:5173/');
-  mainWindow.loadFile('index.html');
+  mainWindow.loadURL('http://localhost:5173/');
+  // mainWindow.loadFile('index.html');
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
@@ -33,6 +36,11 @@ const createWindow = () => {
 app.whenReady().then(() => {
   createWindow();
   initializeDatabase();
+
+  // ipcMain.on('createClient', (event, args) => {
+  //   console.log(args);
+  // });
+  ipcMain.on('createClient', (event, args) => createClient(args));
 
   app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the

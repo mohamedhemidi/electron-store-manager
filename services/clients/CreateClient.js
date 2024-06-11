@@ -1,7 +1,11 @@
 const { models } = require('../../config/dbconfig');
-
+const { v4: uuidv4 } = require('uuid');
 async function createClient(clientData) {
-  const client = await models.Client.create(clientData);
+  let data = {
+    id: uuidv4(),
+    name: clientData,
+  };
+  const client = await models.Client.create(data);
   return client;
 }
 

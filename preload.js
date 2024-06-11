@@ -1,12 +1,14 @@
-const { contextBridge } = require('electron');
-const createClient = require('./services/clients/CreateClient');
-const os = require('os');
+const { contextBridge, ipcRenderer } = require('electron');
 
-const addClient = (data) => {
-  createClient(data);
-};
+if (!process.contextIsolated) {
+  throw new Error('contextIsolation must be enabled in the BrowserWindow');
+}
 
-contextBridge.exposeInMainWorld('electron', {
-  homeDir: () => os.homedir(),
-  addClient: addClient,
-});
+try {
+  contextBridge.exposeInMainWorld('api', {
+    send: (channel, data) => ipcRenderer.send(channel, data),
+    on: (channel, func) => ipcRenderer.on(channel, (event, ...args) => func()),
+  });
+} catch (error) {
+  console.error(error);
+}
