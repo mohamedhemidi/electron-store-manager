@@ -4,8 +4,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('node:path');
 const { initializeDatabase } = require('./config/dbconfig');
-const os = require('os');
-const createClient = require('./services/clients/CreateClient');
+const { CreateClient, GetClientsList } = require('./services/clients');
 
 const createWindow = () => {
   // Create the browser window.
@@ -21,9 +20,9 @@ const createWindow = () => {
   });
 
   // and load the index.html of the app.
-  // mainWindow.loadFile('./app/dist/index.html');
+  mainWindow.loadFile('./app/dist/index.html');
 
-  mainWindow.loadURL('http://localhost:5173/');
+  // mainWindow.loadURL('http://localhost:5173/');
   // mainWindow.loadFile('index.html');
 
   // Open the DevTools.
@@ -37,10 +36,9 @@ app.whenReady().then(() => {
   createWindow();
   initializeDatabase();
 
-  // ipcMain.on('createClient', (event, args) => {
-  //   console.log(args);
-  // });
-  ipcMain.on('createClient', (event, args) => createClient(args));
+
+  ipcMain.on('client:create:request', (event, args) => CreateClient(args));
+  ipcMain.on('client:list:request', (event, args) => GetClientsList(event, args));
 
   app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 
 function App() {
@@ -6,12 +6,28 @@ function App() {
   const api = (window as any).api;
 
   const [name, setName] = useState('');
+  const [clients, setClients] = useState([]);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setName(e.target.value);
   };
-  const handleSubmit = async (): Promise<void> => {
-    await api.send('createClient', name);
+  const handleSubmit = async () => {
+    await api.send('client:create:request', name);
+    api.send('client:list:request', 'parameters');
   };
+
+  const fetchClientsList = () => {
+    api.send('client:list:request', 'parameters');
+    api.receive(
+      'client:list:response',
+      (data: { id: string; name: string }) => {
+        setClients(data);
+      }
+    );
+  };
+
+  useEffect(() => {
+    fetchClientsList();
+  }, []);
 
   return (
     <>
@@ -29,6 +45,9 @@ function App() {
           Create Client
         </button>
       </div>
+      {clients.map((c) => {
+        return <p>{c.name}</p>;
+      })}
     </>
   );
 }
