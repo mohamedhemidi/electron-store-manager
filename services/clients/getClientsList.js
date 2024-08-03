@@ -1,12 +1,11 @@
 const { models } = require('../../config/dbconfig');
+const channels = require('../../constants/channels.json');
 
 async function GetClientsList(event, args) {
-  //console.log('Parameteres received from renderer:', args);
-
   const clients = await models.Client.findAll();
-  const clientsList = clients.map(c => c.dataValues);
+  const clientsList = clients.map((c) => c.dataValues);
 
-  await event.reply('client:list:response', clientsList);
+  await event.reply(channels.ClientsListReceive, clientsList);
 }
 
 module.exports = GetClientsList;

@@ -5,6 +5,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('node:path');
 const { initializeDatabase } = require('./config/dbconfig');
 const { CreateClient, GetClientsList } = require('./services/clients');
+const channels = require('./constants/channels.json');
 
 const createWindow = () => {
   // Create the browser window.
@@ -26,7 +27,7 @@ const createWindow = () => {
   // mainWindow.loadFile('index.html');
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished
@@ -36,9 +37,10 @@ app.whenReady().then(() => {
   createWindow();
   initializeDatabase();
 
-
-  ipcMain.on('client:create:request', (event, args) => CreateClient(args));
-  ipcMain.on('client:list:request', (event, args) => GetClientsList(event, args));
+  ipcMain.on(channels.CreateClient, (event, args) => CreateClient(args));
+  ipcMain.on(channels.ClientsListRequest, (event, args) =>
+    GetClientsList(event, args)
+  );
 
   app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the

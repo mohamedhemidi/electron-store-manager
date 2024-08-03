@@ -1,0 +1,6 @@
+{
+  "CreateClientRequest": "client:create:request",
+  
+  "ClientsListRequest": "client:list:request",
+  "ClientsListReceive": "client:list:response"
+}
