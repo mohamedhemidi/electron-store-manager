@@ -1,8 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { AppContext } from '../../contexts/AppContext';
-import { useNavigate } from 'react-router-dom';
 import channels from '../../constants/channels';
-// import { ValidateOrder } from '../../utils/OrderValidation';
 import { IOrder } from '../ordersList/OrdersList';
 
 const orderData = {
@@ -16,21 +15,21 @@ const orderData = {
   notes: '',
 };
 
-const CreateOrder = () => {
-  const api = useContext(AppContext);
+const EditOrder = () => {
+  const { id } = useParams();
+  const location = useLocation();
 
   const navigate = useNavigate();
-
+  const api = useContext(AppContext);
   const chn = channels;
 
-  const [newOrder, setNewOrder] =
-    useState<Omit<IOrder, 'id' | 'createdAt'>>(orderData);
+  const [newOrder, setNewOrder] = useState<Omit<IOrder, 'id' | 'createdAt'>>(
+    location.state
+  );
 
   const [clients, setClients] = useState<
     { id: string; createdAt: string; name: string }[] | null
   >(null);
-
-  // const [errors, setErrors] = useState<string[]>();
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -42,26 +41,13 @@ const CreateOrder = () => {
   };
 
   const handleSubmit = async () => {
-    console.log(newOrder);
     if (api) {
-      await api.send(chn.CreateOrderRequest, newOrder);
+      await api.send(chn.UpdateOrderRequest, { orderId: id, order: newOrder });
       await api.send(chn.OrdersListRequest);
       navigate('/order/list');
     }
-
-    // setErrors([]);
-    // const validationResult = await ValidateOrder(newOrder);
-    // if (validationResult.valid) {
-
-    //   if (api) {
-    //     await api.send(chn.CreateOrderRequest, newOrder);
-    //     await api.send(chn.OrdersListRequest);
-    //     navigate('/order/list');
-    //   }
-    // } else {
-    //   setErrors(validationResult.errorMessages);
-    // }
   };
+
   const fetchClientsList = () => {
     if (api) {
       api.send(chn.ClientsListRequest, 'parameters');
@@ -77,7 +63,6 @@ const CreateOrder = () => {
   useEffect(() => {
     fetchClientsList();
   }, []);
-
 
   const handleClientChangeInput = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedOption = e.target.selectedOptions[0];
@@ -109,7 +94,7 @@ const CreateOrder = () => {
           <p className="text-base w-full">Back to list</p>
         </div>
         <div className="page-header flex justify-between items-center bg-white p-6 mb-6  rounded-md">
-          <h1>Create Order</h1>
+          <h1>Edit Order</h1>
         </div>
 
         <div className="page-content p-6 bg-white rounded-md">
@@ -131,7 +116,7 @@ const CreateOrder = () => {
               onChange={handleClientChangeInput}
               name="clientId"
             >
-              <option value="" selected disabled>
+              <option value={newOrder.clientId!} selected disabled>
                 Choose client
               </option>
               {clients &&
@@ -142,7 +127,7 @@ const CreateOrder = () => {
                   </option>
                 ))}
             </select>
-            <label className='text-left w-full text-sm'>Weight</label>
+            <label className="text-left w-full text-sm">Weight</label>
             <input
               placeholder="Weight"
               className="input input-bordered w-full max-w-xs"
@@ -151,7 +136,7 @@ const CreateOrder = () => {
               type="number"
               name="weight"
             />
-            <label className='text-left w-full text-sm'>Price</label>
+            <label className="text-left w-full text-sm">Price</label>
             <input
               placeholder="Price"
               className="input input-bordered w-full max-w-xs"
@@ -160,7 +145,7 @@ const CreateOrder = () => {
               type="number"
               name="price"
             />
-           
+
             <select
               className="select select-bordered w-full max-w-xs"
               onChange={handleInputChange}
@@ -215,4 +200,4 @@ const CreateOrder = () => {
   );
 };
 
-export default CreateOrder;
+export default EditOrder;

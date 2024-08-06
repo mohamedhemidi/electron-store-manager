@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/dbconfig');
+const Client = require('./Client');
 
 const Order = sequelize.define('orders', {
   id: {
@@ -7,19 +8,34 @@ const Order = sequelize.define('orders', {
     primaryKey: true,
     allowNull: false,
   },
-  client_name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
+
   weight: {
     type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
+    allowNull: true,
   },
   price: {
     type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
+    allowNull: true,
+  },
+  color: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  dueDate: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  type: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  notes: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  client_name: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
   createdAt: {
     type: DataTypes.DATE,
@@ -28,6 +44,14 @@ const Order = sequelize.define('orders', {
   updatedAt: {
     type: DataTypes.DATE,
     allowNull: false,
+  },
+  clientId: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    references: {
+      model: Client,
+      key: 'id',
+    },
   },
 });
 

@@ -4,8 +4,20 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('node:path');
 const { initializeDatabase } = require('./config/dbconfig');
-const { CreateClient, GetClientsList } = require('./services/clients');
+const {
+  CreateClient,
+  GetClientsList,
+  UpdateClient,
+  DeleteClient,
+} = require('./services/clients');
 const channels = require('./constants/channels.json');
+const {
+  CreateOrder,
+  UpdateOrder,
+  DeleteOrder,
+  ReadOrdersList,
+} = require('./services/orders');
+const GetClientOrders = require('./services/clients/getClientOrders');
 
 const createWindow = () => {
   // Create the browser window.
@@ -21,9 +33,9 @@ const createWindow = () => {
   });
 
   // and load the index.html of the app.
-  mainWindow.loadFile('./app/dist/index.html');
+  // mainWindow.loadFile('./app/dist/index.html');
 
-  // mainWindow.loadURL('http://localhost:5173/');
+  mainWindow.loadURL('http://localhost:5173/');
   // mainWindow.loadFile('index.html');
 
   // Open the DevTools.
@@ -37,9 +49,23 @@ app.whenReady().then(() => {
   createWindow();
   initializeDatabase();
 
-  ipcMain.on(channels.CreateClient, (event, args) => CreateClient(args));
+  // Clients
+  ipcMain.on(channels.CreateClientRequest, (event, args) => CreateClient(args));
+  ipcMain.on(channels.UpdateClientRequest, (event, args) => UpdateClient(args));
+  ipcMain.on(channels.DeleteClientRequest, (event, args) => DeleteClient(args));
   ipcMain.on(channels.ClientsListRequest, (event, args) =>
     GetClientsList(event, args)
+  );
+  // Orders
+
+  ipcMain.on(channels.CreateOrderRequest, (event, args) => CreateOrder(args));
+  ipcMain.on(channels.UpdateOrderRequest, (event, args) => UpdateOrder(args));
+  ipcMain.on(channels.DeleteOrderRequest, (event, args) => DeleteOrder(args));
+  ipcMain.on(channels.OrdersListRequest, (event, args) =>
+    ReadOrdersList(event, args)
+  );
+  ipcMain.on(channels.ClientOrdersListRequest, (event, args) =>
+    GetClientOrders(event, args)
   );
 
   app.on('activate', () => {

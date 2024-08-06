@@ -5,8 +5,8 @@ import OrdersIcon from '../../../assets/icons/cart.svg';
 import { useNavigate } from 'react-router-dom';
 
 const menus = [
-  { title: 'Clients', src: UsersIcon, link: "/client/create" },
-  { title: 'Orders', src: OrdersIcon, link: "" },
+  { title: 'Orders', src: OrdersIcon, link: '/order/list' },
+  { title: 'Clients', src: UsersIcon, link: '/client/list' },
 ];
 
 const Sidebar = () => {
@@ -28,7 +28,10 @@ const Sidebar = () => {
           <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />
         </svg>
       </div>
-      <div className="flex gap-x-4 items-center cursor-pointer">
+      <div
+        className="flex gap-x-4 items-center cursor-pointer"
+        onClick={() => navigate('/')}
+      >
         <img src={LogoIcon} className="w-10 h-10 duration-500" />
         <h1
           className={`origin-left font-medium text-xl duration-300 ${
@@ -42,15 +45,24 @@ const Sidebar = () => {
         {menus.map((item, index) => (
           <li
             key={index}
-            className="text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-[#ffffff2b] rounded-md "
+            className={`text-gray-300 text-sm flex  items-center gap-x-4 cursor-pointer p-2 hover:bg-[#ffffff2b] rounded-md ${
+              !open ? 'justify-center' : ''
+            }`}
             onClick={() => navigate(item.link)}
           >
-            <div className={`${open ? 'p-2' : 'p-1'} flex justify-center items-center w-9 h-9  border rounded-md`}>
+            <button className="btn btn-circle border-none bg-slate-400">
+              <img src={item.src} className="h-6 w-6" />
+            </button>
+            {/* <div className={`${open ? 'p-2' : 'p-1'} flex justify-center items-center w-9 h-9  border rounded-full border-none bg-slate-400`}>
               <img src={item.src} className="w-full" />
-            </div>
+            </div> */}
 
-            <span className={`${!open && 'hidden'} origin-left duration-200 font-semibold`}>
-            {item.title}
+            <span
+              className={`${
+                !open && 'hidden'
+              } origin-left duration-200 font-semibold`}
+            >
+              {item.title}
             </span>
           </li>
         ))}

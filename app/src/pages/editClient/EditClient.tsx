@@ -1,26 +1,25 @@
 import { useContext, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import channels from '../../constants/channels';
 import { AppContext } from '../../contexts/AppContext';
-import { useNavigate } from 'react-router-dom';
 
-
-const CreateClient = () => {
-  const api = useContext(AppContext);
-
+const EditClient = () => {
+  const { id } = useParams();
+  const location = useLocation();
 
   const navigate = useNavigate();
-
+  const api = useContext(AppContext);
   const chn = channels;
 
-  const [name, setName] = useState<string>('');
+  const [newName, setNewName] = useState<string>(location?.state?.name);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setName(e.target.value);
+    setNewName(e.target.value);
   };
   const handleSubmit = async () => {
     if (api) {
-      await api.send(chn.CreateClientRequest, name);
-      await api.send(chn.ClientsListRequest, 'parameters');
+      await api.send(chn.UpdateClientRequest, { clientId: id, newName });
+      await api.send(chn.ClientsListRequest);
       navigate('/client/list');
     }
   };
@@ -41,7 +40,7 @@ const CreateClient = () => {
           <p className="text-base w-full">Back to list</p>
         </div>
         <div className="page-header flex justify-between items-center bg-white p-6 mb-6  rounded-md">
-          <h1>Create Client</h1>
+          <h1>Update Client</h1>
         </div>
 
         <div className="page-content p-6 bg-white rounded-md">
@@ -49,13 +48,13 @@ const CreateClient = () => {
             <input
               placeholder="Type client name"
               className="input input-bordered w-full max-w-xs"
-              value={name}
+              value={newName}
               onChange={handleChange}
               type="text"
               name="name"
             />
             <button className="btn btn-primary" onClick={handleSubmit}>
-              Create
+              Update
             </button>
           </div>
         </div>
@@ -64,4 +63,4 @@ const CreateClient = () => {
   );
 };
 
-export default CreateClient;
+export default EditClient;
