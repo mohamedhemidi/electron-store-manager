@@ -1,8 +1,15 @@
-import Versions from './components/Versions'
+import channels from '@shared/constants/channels'
 import electronLogo from './assets/electron.svg'
 
 function App(): JSX.Element {
-  const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
+  const ipcHandle = (): void => window.api.send(channels.CreateClientRequest, 'Mohamed')
+
+  const ipcHandleClientList = (): void => {
+    window.api.send(channels.ClientsListRequest)
+    window.api.receive(channels.ClientsListReceive, (data) => {
+      console.log(data)
+    })
+  }
 
   return (
     <>
@@ -25,9 +32,11 @@ function App(): JSX.Element {
           <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
             Send IPC
           </a>
+          <a target="_blank" rel="noreferrer" onClick={ipcHandleClientList}>
+            Get Clients IPC
+          </a>
         </div>
       </div>
-      <Versions></Versions>
     </>
   )
 }

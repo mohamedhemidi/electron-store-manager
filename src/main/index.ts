@@ -2,18 +2,24 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { ClientCreate, ClientListRead } from './services/clients'
+import { setupDatabase } from './config/DBconfig'
+import channels from '@shared/constants/channels'
+import { setupTables } from './models'
 
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
+    width: 1000,
+    height: 600,
     show: false,
-    autoHideMenuBar: true,
+    center: true,
+    title: 'Store',
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+      contextIsolation: true
     }
   })
 
@@ -35,6 +41,13 @@ function createWindow(): void {
   }
 }
 
+setupDatabase()
+
+setupTables()
+
+// ClientModel.createTable()
+// OrderModel.createTable()
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -50,7 +63,9 @@ app.whenReady().then(() => {
   })
 
   // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
+  // ipcMain.on('ping', () => console.log('pong'))
+  ipcMain.on(channels.CreateClientRequest, (_event, args) => ClientCreate(args))
+  ipcMain.on(channels.ClientsListRequest, (event) => ClientListRead(event))
 
   createWindow()
 
