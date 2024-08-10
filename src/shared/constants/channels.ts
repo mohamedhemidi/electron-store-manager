@@ -12,6 +12,8 @@ const channels = {
   UpdateOrderRequest: 'order:update:request',
   DeleteOrderRequest: 'order:delete:request',
   OrdersListRequest: 'order:list:request',
-  OrdersListReceive: 'order:list:response'
+  OrdersListReceive: 'order:list:response',
+
+  PrintTiquetPdf: 'print:tiquet:pdf'
 }
 export default channels

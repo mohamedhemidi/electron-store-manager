@@ -2,10 +2,13 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { ClientCreate, ClientListRead } from './services/clients'
+import { ClientCreate, ClientListRead, ClientUpdate, ClientDelete } from './services/clients'
 import { setupDatabase } from './config/DBconfig'
 import channels from '@shared/constants/channels'
 import { setupTables } from './models'
+import { OrderCreate, OrderDelete, OrderListRead, OrderUpdate } from './services/orders'
+import ClientOrdersRead from './services/clients/ClientOrdersRead'
+import GenerateTiquetPDF from './services/tiquet/GenerateTiquetPDF'
 
 function createWindow(): void {
   // Create the browser window.
@@ -15,6 +18,12 @@ function createWindow(): void {
     show: false,
     center: true,
     title: 'Store',
+    // frame: false,
+    // vibrancy: 'under-window',
+    // visualEffectState: 'active',
+    // autoHideMenuBar: true,
+    // titleBarStyle: 'hidden',
+    // trafficLightPosition: { x: 15, y: 10 },
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
@@ -45,9 +54,6 @@ setupDatabase()
 
 setupTables()
 
-// ClientModel.createTable()
-// OrderModel.createTable()
-
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -63,9 +69,30 @@ app.whenReady().then(() => {
   })
 
   // IPC test
-  // ipcMain.on('ping', () => console.log('pong'))
+
+  /*
+  / Clients
+  /** */
   ipcMain.on(channels.CreateClientRequest, (_event, args) => ClientCreate(args))
   ipcMain.on(channels.ClientsListRequest, (event) => ClientListRead(event))
+  ipcMain.on(channels.UpdateClientRequest, (_event, args) => ClientUpdate(args))
+  ipcMain.on(channels.DeleteClientRequest, (_event, args) => ClientDelete(args))
+  ipcMain.on(channels.ClientOrdersListRequest, (event, args) => ClientOrdersRead(event, args))
+
+  /*
+  / Orders
+  /** */
+
+  ipcMain.on(channels.CreateOrderRequest, (event, args) => OrderCreate(args))
+  ipcMain.on(channels.UpdateOrderRequest, (event, args) => OrderUpdate(args))
+  ipcMain.on(channels.DeleteOrderRequest, (event, args) => OrderDelete(args))
+  ipcMain.on(channels.OrdersListRequest, (event) => OrderListRead(event))
+
+  /*
+  / PDF Print
+  /** */
+
+  ipcMain.on(channels.PrintTiquetPdf, async (event, args) => GenerateTiquetPDF(event, args))
 
   createWindow()
 
