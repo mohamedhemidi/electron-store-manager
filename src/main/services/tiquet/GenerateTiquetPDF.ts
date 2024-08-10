@@ -19,7 +19,7 @@ const GenerateTiquetPDF = async (event, args): Promise<void> => {
   startY += lineHeight
   doc.text(`Name : ${args.name}`, startX, startY)
   startY += lineHeight
-  doc.text(`Price : ${args.price}`, startX, startY)
+  doc.text(`Price : ${args.price} DZA`, startX, startY)
   startY += lineHeight
   doc.text(`Due Date : ${moment(args.dueDate).format('DD/MM/YYYY h:mmA')}`, startX, startY)
   startY += lineHeight

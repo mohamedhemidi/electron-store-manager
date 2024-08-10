@@ -83,9 +83,9 @@ app.whenReady().then(() => {
   / Orders
   /** */
 
-  ipcMain.on(channels.CreateOrderRequest, (event, args) => OrderCreate(args))
-  ipcMain.on(channels.UpdateOrderRequest, (event, args) => OrderUpdate(args))
-  ipcMain.on(channels.DeleteOrderRequest, (event, args) => OrderDelete(args))
+  ipcMain.on(channels.CreateOrderRequest, (_event, args) => OrderCreate(args))
+  ipcMain.on(channels.UpdateOrderRequest, (_event, args) => OrderUpdate(args))
+  ipcMain.on(channels.DeleteOrderRequest, (_event, args) => OrderDelete(args))
   ipcMain.on(channels.OrdersListRequest, (event) => OrderListRead(event))
 
   /*

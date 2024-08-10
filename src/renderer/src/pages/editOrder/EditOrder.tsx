@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { AppContext } from '../../contexts/AppContext'
-import { IOrder } from '../ordersList/OrdersList'
 import channels from '@shared/constants/channels'
+import IOrder from '@renderer/types/Order'
 
 const orderData = {
   client_name: '',
