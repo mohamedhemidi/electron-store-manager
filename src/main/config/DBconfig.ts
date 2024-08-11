@@ -3,8 +3,8 @@ import { app } from 'electron'
 import path from 'node:path'
 
 export function setupDatabase(): typeof Database {
-  const userDataPath = app.getPath('userData')
-  const dbPath = path.join(userDataPath, 'database.db')
+  const userDataPath = app.getPath('documents')
+  const dbPath = path.join(userDataPath, 'electron_store_db.db')
 
   const db = new Database(dbPath, { verbose: console.log })
   return db
