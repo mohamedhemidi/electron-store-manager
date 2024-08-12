@@ -3,9 +3,12 @@ import { useNavigate } from 'react-router-dom'
 import { AppContext } from '../../contexts/AppContext'
 import EditIcon from '../../assets/icons/edit.svg'
 import DeleteIcon from '../../assets/icons/delete.svg'
+import PrinterIcon from '../../assets/icons/printer.svg'
 import moment from 'moment'
 import channels from '@shared/constants/channels'
 import IOrder from '@renderer/types/Order'
+import { PageHeader } from '@renderer/components/pageHeader'
+import TableSection from '@renderer/components/TableSection/TableSection'
 
 const OrdersList = (): JSX.Element => {
   const navigate = useNavigate()
@@ -51,107 +54,129 @@ const OrdersList = (): JSX.Element => {
   return (
     <>
       <div className="p-6">
-        <div className="page-header flex justify-between items-center bg-white p-6 mb-6  rounded-md">
-          <h1>Orders List</h1>
+        <PageHeader>
+          <h1 className="dark:text-white">Orders List</h1>
           <button
             onClick={() => navigate('/order/create')}
             className="btn btn-success text-white font-semibold"
           >
             + Create Order
           </button>
-        </div>
-        <div className="p-6 bg-white rounded-md">
-          <div className="table-section">
-            <div className="overflow-x-auto">
-              <table className="table">
-                {/* head */}
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th>Client Name</th>
-                    <th>Weight</th>
-                    <th>Price</th>
-                    <th>Color</th>
-                    <th>Type</th>
-                    <th>Due Date</th>
-                    <th>Notes</th>
-                    <th>Created At</th>
-                    <th>Actions</th>
-                    <th>PDF</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orders &&
-                    orders.map((c, index) => {
-                      return (
-                        <tr key={index}>
-                          <th>{index + 1}</th>
-                          <td>{c.client_name}</td>
-                          <td>{c.weight}</td>
-                          <td>{c.price}</td>
-                          <td>{c.color}</td>
-                          <td>{c.type}</td>
-                          <td>{moment(c.dueDate).calendar()}</td>
-                          <td>
-                            <a href="#my_modal_9" onClick={() => setNote(c.notes)}>
-                              {c.notes}
+        </PageHeader>
+        <div className="p-6 bg-white dark:bg-slate-950 rounded-md">
+          <TableSection
+            Header={
+              <tr>
+                <th></th>
+                <th>Client Name</th>
+                <th>Weight</th>
+                <th>Price</th>
+                <th>Color</th>
+                <th>Type</th>
+                <th>Due Date</th>
+                <th>Notes</th>
+                <th>Created At</th>
+                <th>Actions</th>
+                <th>PDF</th>
+              </tr>
+            }
+            Body={
+              <>
+                {orders &&
+                  orders.map((c, index) => {
+                    return (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>{c.client_name}</td>
+                        <td>{c.weight}</td>
+                        <td>{c.price}</td>
+                        <td>{c.color}</td>
+                        <td>{c.type}</td>
+                        <td>
+                          <p className="w-44">{moment(c.dueDate).format('DD/MM/YYYY h:mmA')}</p>
+                        </td>
+                        <td>
+                          <a
+                            className="cursor-pointer"
+                            onClick={() => {
+                              if (document) {
+                                ;(
+                                  document.getElementById('note_modal') as HTMLFormElement
+                                ).showModal()
+                              }
+                              setNote(c.notes)
+                            }}
+                          >
+                            <p className="w-44">{c.notes.substring(0, 25)}</p>
+                          </a>
+                        </td>
+
+                        <td>
+                          <p className="w-36">{moment(c.createdAt).format('DD/MM/YYYY h:mmA')}</p>
+                        </td>
+                        <td className="flex gap-2 items-center">
+                          <button
+                            className="btn btn-circle"
+                            onClick={() => navigate(`/order/edit/${c.id}`, { state: c })}
+                          >
+                            <img src={EditIcon} className="h-6 w-6" />
+                          </button>
+                          <button className="btn btn-circle">
+                            <a
+                              onClick={() => {
+                                if (document) {
+                                  ;(
+                                    document.getElementById('delete_modal') as HTMLFormElement
+                                  ).showModal()
+                                }
+                                setId(c.id)
+                              }}
+                            >
+                              <img src={DeleteIcon} className="h-6 w-6" />
                             </a>
-                          </td>
-                          <td>{moment(c.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</td>
-                          <td className="flex gap-2 items-center">
-                            <button
-                              className="btn btn-circle"
-                              onClick={() => navigate(`/order/edit/${c.id}`, { state: c })}
-                            >
-                              <img src={EditIcon} className="h-6 w-6" />
-                            </button>
-                            <button className="btn btn-circle">
-                              <a href="#my_modal_8" onClick={() => setId(c.id)}>
-                                <img src={DeleteIcon} className="h-6 w-6" />
-                              </a>
-                            </button>
-                          </td>
-                          <td>
-                            <button
-                              className="btn btn-success"
-                              onClick={() => handleGeneratePDF(c)}
-                            >
-                              Print
-                            </button>
-                          </td>
-                        </tr>
-                      )
-                    })}
-                </tbody>
-              </table>
-            </div>
-          </div>
+                          </button>
+                        </td>
+                        <td>
+                          <button className="btn btn-circle" onClick={() => handleGeneratePDF(c)}>
+                            <img src={PrinterIcon} className="h-6 w-6" />
+                          </button>
+                        </td>
+                      </tr>
+                    )
+                  })}
+              </>
+            }
+          />
         </div>
 
         {/* Delete Order Modal */}
-        <div className="modal" role="dialog" id="my_modal_8">
+        <dialog className="modal" id="delete_modal">
           <div className="modal-box">
             <h3 className="text-lg font-bold">Delete Order</h3>
             <p className="py-4">Please confirm deleting the order by clicking the button below</p>
             <div className="modal-action">
-              <a href="#" className="btn" onClick={() => deleteOrder()}>
-                Delete
-              </a>
+              <form method="dialog">
+                <button className="btn" onClick={() => deleteOrder()}>
+                  Delete
+                </button>
+              </form>
             </div>
           </div>
-        </div>
+        </dialog>
         {/* Notes Modal */}
-        <div className="modal" role="dialog" id="my_modal_9">
+        <dialog id="note_modal" className="modal">
           <div className="modal-box">
             <h3 className="text-lg font-bold">Note</h3>
             <p className="py-4">{note}</p>
             <div className="modal-action">
-              <a href="#" className="btn" onClick={() => setNote('')}>
-                Close
-              </a>
+              <form method="dialog">
+                <button className="btn" onClick={() => setNote('')}>
+                  Close
+                </button>
+              </form>
             </div>
           </div>
-        </div>
+        </dialog>
       </div>
     </>
   )

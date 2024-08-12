@@ -2,6 +2,8 @@ import { useContext, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { AppContext } from '../../contexts/AppContext'
 import channels from '@shared/constants/channels'
+import { PageHeader } from '@renderer/components/pageHeader'
+import Breadcrumps from '@renderer/components/Breadcrumps/Breadcrumps'
 
 const EditClient = (): JSX.Element => {
   const { id } = useParams()
@@ -27,23 +29,13 @@ const EditClient = (): JSX.Element => {
   return (
     <>
       <div className="p-6">
-        <div
-          className="breadcrumbs mb-2 flex flex-row items-center cursor-pointer"
-          onClick={() => navigate('/client/list')}
-        >
-          <div className="w-10">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-              <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />
-            </svg>
-          </div>
-          {/* <p className="text-base w-full">{en['back_to_list']}</p> */}
-          <p className="text-base w-full">Back to list</p>
-        </div>
-        <div className="page-header flex justify-between items-center bg-white p-6 mb-6  rounded-md">
-          <h1>Update Client</h1>
-        </div>
+        <Breadcrumps path="/client/list">Back to list</Breadcrumps>
 
-        <div className="page-content p-6 bg-white rounded-md">
+        <PageHeader>
+          <h1 className="dark:text-white">Update Client</h1>
+        </PageHeader>
+
+        <div className="page-content p-6 bg-white  dark:bg-slate-950 rounded-md">
           <div className="flex justify-between items-center">
             <input
               placeholder="Type client name"
