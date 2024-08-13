@@ -25,21 +25,28 @@ const OrdersList = (): JSX.Element => {
   const [id, setId] = useState<string>()
   const [response, setResponse] = useState<IOrderResponse | null>(null)
   const [currentPage, setCurrentPage] = useState<number>(1)
-  const [limit] = useState<number>(3)
+  const [limit] = useState<number>(25)
   const [loading, setLoading] = useState<boolean>(false)
+
+  const [searchValue, setSearchValue] = useState<string>('')
 
   const [note, setNote] = useState<string>('')
 
-  const fetchOrdersList = (): void => {
+  const fetchOrdersList = (searchValue?: string): void => {
     if (api) {
       if (location.state) {
-        api.send(chn.ClientOrdersListRequest, { id: location.state, page: currentPage, limit })
+        api.send(chn.ClientOrdersListRequest, {
+          id: location.state,
+          page: currentPage,
+          limit,
+          searchValue
+        })
         api.receive(chn.ClientOrdersListReceive, (data: IOrderResponse) => {
           setResponse(data)
           setLoading(false)
         })
       } else {
-        api.send(chn.OrdersListRequest, { page: currentPage, limit })
+        api.send(chn.OrdersListRequest, { page: currentPage, limit, searchValue })
         api.receive(chn.OrdersListReceive, (data: IOrderResponse) => {
           setResponse(data)
           setLoading(false)
@@ -74,6 +81,9 @@ const OrdersList = (): JSX.Element => {
   const handleSetPage = (data: number): void => {
     setCurrentPage(data)
   }
+  const handleSearch = (): void => {
+    fetchOrdersList(searchValue)
+  }
   return (
     <>
       <div className="p-6">
@@ -90,6 +100,19 @@ const OrdersList = (): JSX.Element => {
           <LoadingSpinner />
         ) : (
           <div className="flex flex-col gap-6">
+            <div className="flex flex-row justify-between items-center p-6 bg-white dark:bg-slate-950 rounded-md">
+              <input
+                placeholder={content.search}
+                className="input input-bordered w-full max-w-xs"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                type="text"
+                name="searchValue"
+              />
+              <button className="btn btn-primary" onClick={handleSearch}>
+                {content.search}
+              </button>
+            </div>
             <div className="p-6 bg-white dark:bg-slate-950 rounded-md">
               <TableSection
                 Header={

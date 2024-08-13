@@ -4,10 +4,14 @@ import IOrderResponse from '@shared/types/OrderResponse'
 
 const OrderListRead = async (event, data): Promise<void> => {
   const db = setupDatabase()
-  const query = `SELECT * 
-                FROM orders
-                ORDER BY createdAt DESC
-                `
+  let query = `SELECT * FROM orders`
+
+  if (data.searchValue) {
+    query += ` WHERE client_name LIKE '%${data.searchValue}%' OR weight LIKE '%${data.searchValue}%' OR notes LIKE '%${data.searchValue}%'`
+  }
+
+  query += ` ORDER BY createdAt DESC`
+
   const results: IOrderResponse = {
     total: 0,
     next: 0,

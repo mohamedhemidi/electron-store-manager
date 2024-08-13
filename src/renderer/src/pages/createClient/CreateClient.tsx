@@ -40,7 +40,7 @@ const CreateClient = (): ReactElement => {
         <div className="page-content p-6 bg-white  dark:bg-slate-950 rounded-md">
           <div className="flex justify-between items-center">
             <input
-              placeholder="Type client name"
+              placeholder={content.type_client_name}
               className="input input-bordered w-full max-w-xs"
               value={name}
               onChange={handleChange}

@@ -20,7 +20,7 @@
   "delete_order": "Delete Order",
   "confirm_order_deletion_prompt": "Please confirm deleting the order by clicking the button below",
   "no_orders_found": "No orders found !",
-
+  "number_of_orders": "Number of orders",
 
   "clients": "Clients",
   "clients_list": "Clients List",
@@ -31,8 +31,10 @@
   "delete_client": "Delete Client",
   "confirm_client_deletion_prompt": "Please confirm deleting the client by clicking the button below",
   "no_clients_found": "No clients found !",
+  "number_of_clients": "Number of clients",
 
   "back_to_list": "Back to List",
   "close": "Close",
-  "create": "Create"
+  "create": "Create",
+  "search": "Search"
 }

@@ -22,12 +22,14 @@ const ClientsList = (): ReactElement => {
   const [id, setId] = useState<string>()
   const [response, setResponse] = useState<IClientResponse | null>(null)
   const [currentPage, setCurrentPage] = useState<number>(1)
-  const [limit] = useState<number>(3)
+  const [limit] = useState<number>(25)
   const [loading, setLoading] = useState<boolean>(false)
 
-  const fetchClientsList = (): void => {
+  const [searchValue, setSearchValue] = useState<string>('')
+
+  const fetchClientsList = (searchValue?: string): void => {
     if (api) {
-      api.send(chn.ClientsListRequest, { page: currentPage, limit })
+      api.send(chn.ClientsListRequest, { page: currentPage, limit, searchValue })
       api.receive(chn.ClientsListReceive, (data: IClientResponse) => {
         setResponse(data)
         setLoading(false)
@@ -50,6 +52,9 @@ const ClientsList = (): ReactElement => {
   const handleSetPage = (data: number): void => {
     setCurrentPage(data)
   }
+  const handleSearch = (): void => {
+    fetchClientsList(searchValue)
+  }
 
   return (
     <>
@@ -68,6 +73,19 @@ const ClientsList = (): ReactElement => {
           <LoadingSpinner />
         ) : (
           <div className="flex flex-col gap-6">
+            <div className="flex flex-row justify-between items-center p-6 bg-white dark:bg-slate-950 rounded-md">
+              <input
+                placeholder={content.type_client_name}
+                className="input input-bordered w-full max-w-xs"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                type="text"
+                name="searchValue"
+              />
+              <button className="btn btn-primary" onClick={handleSearch}>
+                {content.search}
+              </button>
+            </div>
             <div className="p-6 bg-white  dark:bg-slate-950 rounded-md">
               <TableSection
                 Header={

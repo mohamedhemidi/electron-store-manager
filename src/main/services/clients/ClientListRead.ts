@@ -4,7 +4,8 @@ import IClientResponse, { IClient } from '@shared/types/ClientsResponse'
 
 const ClientListRead = async (event, data): Promise<void> => {
   const db = setupDatabase()
-  const query = `SELECT * FROM clients`
+
+  let query = `SELECT * FROM clients`
 
   const results: IClientResponse = {
     total: 0,
@@ -12,6 +13,10 @@ const ClientListRead = async (event, data): Promise<void> => {
     previous: 0,
     pageCount: 0,
     data: []
+  }
+
+  if (data && data.searchValue) {
+    query += ` WHERE name LIKE '%${data.searchValue}%'`
   }
 
   const stmt = db.prepare(query)

@@ -9,6 +9,7 @@ import { setupTables } from './models'
 import { OrderCreate, OrderDelete, OrderListRead, OrderUpdate } from './services/orders'
 import ClientOrdersRead from './services/clients/ClientOrdersRead'
 import GenerateTiquetPDF from './services/tiquet/GenerateTiquetPDF'
+import { DashboardReportRead } from './services/dashboard'
 
 function createWindow(): void {
   // Create the browser window.
@@ -88,6 +89,10 @@ app.whenReady().then(() => {
   ipcMain.on(channels.DeleteOrderRequest, (_event, args) => OrderDelete(args))
   ipcMain.on(channels.OrdersListRequest, (event, args) => OrderListRead(event, args))
 
+  /*
+  / Dashboard
+  /** */
+  ipcMain.on(channels.DashboardReportRequest, (event) => DashboardReportRead(event))
   /*
   / PDF Print
   /** */

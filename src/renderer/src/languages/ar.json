@@ -20,6 +20,7 @@
   "delete_order": "حذف الطلب",
   "confirm_order_deletion_prompt": "الرجاء تأكيد حذف الطلب عن طريق الضغط على الزر أسفله",
   "no_orders_found": "عذرا لم يتم العثور على طلبات",
+  "number_of_orders": "عدد الطلبات",
 
   "clients": "زبائن",
   "clients_list": "قائمة الزبائن",
@@ -30,8 +31,10 @@
   "delete_client": "حذف الزبون",
   "confirm_client_deletion_prompt": "الرجاء تأكيد حذف الزبون عن طريق الضغط على الزر أسفله",
   "no_clients_found": "عذرا لم يتم العثور على زبائن",
+  "number_of_clients": "عدد الزبائن",
 
   "back_to_list": "عودة إلى القائمة",
   "close": "إغلاق",
-  "create": "إنشاء"
+  "create": "إنشاء",
+  "search": "بحث"
 }

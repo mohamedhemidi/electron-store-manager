@@ -14,6 +14,9 @@ const channels = {
   OrdersListRequest: 'order:list:request',
   OrdersListReceive: 'order:list:response',
 
-  PrintTiquetPdf: 'print:tiquet:pdf'
+  PrintTiquetPdf: 'print:tiquet:pdf',
+
+  DashboardReportRequest: 'dashboard:report:request',
+  DashboardReportRespone: 'dashboard:report:response'
 }
 export default channels
