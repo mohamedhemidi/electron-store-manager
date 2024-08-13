@@ -1,3 +1,37 @@
 {
-  "back_to_list": "عودة إلي القائمة"
+  "orders": "طلبات",
+  "orders_list": "قائمة الطلبات",
+  "create_order": "إنشاء طلب",
+  "client_name": "إسم الزبون",
+  "weight": "الوزن",
+  "price": "الثمن",
+  "color": "اللون",
+  "type": "النوع",
+  "choose_type": "إختر نوع الخدمة",
+  "choose_client": "إختر زبون",
+  "due_date": "تاريخ التسليم",
+  "notes": "ملاحظات",
+  "created_at": "تم إنشاؤه في",
+  "actions": "إجراءات",
+  "edit_order": "تعديل الطلب",
+  "reset": "حذف الكل",
+  "update": "تعديل",
+  "delete": "حذف",
+  "delete_order": "حذف الطلب",
+  "confirm_order_deletion_prompt": "الرجاء تأكيد حذف الطلب عن طريق الضغط على الزر أسفله",
+  "no_orders_found": "عذرا لم يتم العثور على طلبات",
+
+  "clients": "زبائن",
+  "clients_list": "قائمة الزبائن",
+  "create_client": "إنشاء زبون",
+  "name": "الإسم",
+  "update_client": "تعديل الزبون",
+  "type_client_name": "أكتب إسم الزبون",
+  "delete_client": "حذف الزبون",
+  "confirm_client_deletion_prompt": "الرجاء تأكيد حذف الزبون عن طريق الضغط على الزر أسفله",
+  "no_clients_found": "عذرا لم يتم العثور على زبائن",
+
+  "back_to_list": "عودة إلى القائمة",
+  "close": "إغلاق",
+  "create": "إنشاء"
 }

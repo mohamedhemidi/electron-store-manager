@@ -1,17 +1,20 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import LogoIcon from '../../../assets/logo.png'
 import UsersIcon from '../../../assets/icons/users.svg'
 import OrdersIcon from '../../../assets/icons/cart.svg'
 import { useNavigate } from 'react-router-dom'
 import { DarkThemeToggle } from '@renderer/components/DarkThemeToggle'
+import { LanguageToggle } from '@renderer/components/LanguageToggle'
+import { LanguageContext } from '@renderer/contexts/LanguageContext'
 
 const menus = [
-  { title: 'Orders', src: OrdersIcon, link: '/order/list' },
-  { title: 'Clients', src: UsersIcon, link: '/client/list' }
+  { title: { en: 'Orders', ar: 'طلبات' }, src: OrdersIcon, link: '/order/list' },
+  { title: { en: 'Clients', ar: 'زبائن' }, src: UsersIcon, link: '/client/list' }
 ]
 
 const Sidebar = (): JSX.Element => {
   const navigate = useNavigate()
+  const { lang } = useContext(LanguageContext)
   const [open, setOpen] = useState(true)
   return (
     <div
@@ -52,13 +55,16 @@ const Sidebar = (): JSX.Element => {
               </button>
 
               <span className={`${!open && 'hidden'} origin-left duration-200 font-semibold`}>
-                {item.title}
+                {item.title[lang]}
               </span>
             </li>
           ))}
         </ul>
-        <div className="mt-auto">
+        <div
+          className={`mt-auto flex  justify-center gap-4 items-center ${open ? 'flex-row' : 'flex-col'}`}
+        >
           <DarkThemeToggle />
+          <LanguageToggle />
         </div>
       </div>
     </div>

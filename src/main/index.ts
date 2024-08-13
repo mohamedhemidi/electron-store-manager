@@ -74,7 +74,7 @@ app.whenReady().then(() => {
   / Clients
   /** */
   ipcMain.on(channels.CreateClientRequest, (_event, args) => ClientCreate(args))
-  ipcMain.on(channels.ClientsListRequest, (event) => ClientListRead(event))
+  ipcMain.on(channels.ClientsListRequest, (event, args) => ClientListRead(event, args))
   ipcMain.on(channels.UpdateClientRequest, (_event, args) => ClientUpdate(args))
   ipcMain.on(channels.DeleteClientRequest, (_event, args) => ClientDelete(args))
   ipcMain.on(channels.ClientOrdersListRequest, (event, args) => ClientOrdersRead(event, args))
@@ -86,7 +86,7 @@ app.whenReady().then(() => {
   ipcMain.on(channels.CreateOrderRequest, (_event, args) => OrderCreate(args))
   ipcMain.on(channels.UpdateOrderRequest, (_event, args) => OrderUpdate(args))
   ipcMain.on(channels.DeleteOrderRequest, (_event, args) => OrderDelete(args))
-  ipcMain.on(channels.OrdersListRequest, (event) => OrderListRead(event))
+  ipcMain.on(channels.OrdersListRequest, (event, args) => OrderListRead(event, args))
 
   /*
   / PDF Print

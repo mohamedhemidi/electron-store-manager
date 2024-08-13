@@ -1,3 +1,38 @@
 {
-  "back_to_list": "Back to List"
+  "orders": "Orders",
+  "orders_list": "Orders list",
+  "create_order": "Create Order",
+  "client_name": "Client Name",
+  "weight": "Weight",
+  "price": "Price",
+  "color": "Color",
+  "type": "Type",
+  "choose_type": "Choose type",
+  "choose_client": "Choose client",
+  "due_date": "Due date",
+  "notes": "Notes",
+  "created_at": "Created At",
+  "actions": "Actions",
+  "edit_order": "Edit Order",
+  "reset": "Reset",
+  "update": "Update",
+  "delete": "Delete",
+  "delete_order": "Delete Order",
+  "confirm_order_deletion_prompt": "Please confirm deleting the order by clicking the button below",
+  "no_orders_found": "No orders found !",
+
+
+  "clients": "Clients",
+  "clients_list": "Clients List",
+  "create_client": "Create Client",
+  "name": "Name",
+  "update_client": "Update Client",
+  "type_client_name": "Type client name",
+  "delete_client": "Delete Client",
+  "confirm_client_deletion_prompt": "Please confirm deleting the client by clicking the button below",
+  "no_clients_found": "No clients found !",
+
+  "back_to_list": "Back to List",
+  "close": "Close",
+  "create": "Create"
 }

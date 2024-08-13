@@ -6,6 +6,8 @@ import channels from '@shared/constants/channels'
 import IOrder from '@renderer/types/Order'
 import { PageHeader } from '@renderer/components/pageHeader'
 import Breadcrumps from '@renderer/components/Breadcrumps/Breadcrumps'
+import getTranslation from '@renderer/utils/getTranslation'
+import IClientResponse from '@shared/types/ClientsResponse'
 
 const orderData = {
   client_name: '',
@@ -24,6 +26,8 @@ const CreateOrder = (): ReactElement => {
   const navigate = useNavigate()
 
   const chn = channels
+
+  const content = getTranslation()
 
   const [newOrder, setNewOrder] = useState<Omit<IOrder, 'id' | 'createdAt'>>(orderData)
 
@@ -63,19 +67,18 @@ const CreateOrder = (): ReactElement => {
   }
   const fetchClientsList = (): void => {
     if (api) {
-      api.send(chn.ClientsListRequest, 'parameters')
-      api.receive(
-        chn.ClientsListReceive,
-        (data: { id: string; name: string; createdAt: string }[]) => {
-          setClients(data)
-        }
-      )
+      api.send(chn.ClientsListRequest)
+      api.receive(chn.ClientsListReceive, (data: IClientResponse) => {
+        setClients(data.data)
+      })
     }
   }
 
   useEffect(() => {
     fetchClientsList()
   }, [])
+
+  console.log('======= users =========', clients)
 
   const handleClientChangeInput = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     const selectedOption = e.target.selectedOptions[0]
@@ -94,19 +97,19 @@ const CreateOrder = (): ReactElement => {
   return (
     <>
       <div className="p-6">
-        <Breadcrumps path="/order/list">Back to list</Breadcrumps>
+        <Breadcrumps path="/order/list">{content.back_to_list}</Breadcrumps>
 
         <PageHeader>
-          <h1 className="dark:text-white">Create Order</h1>
+          <h1 className="dark:text-white">{content.create_order}</h1>
         </PageHeader>
 
         <div className="page-content p-6 bg-white  dark:bg-slate-950 rounded-md">
           <button className="btn btn-info" onClick={resetForm}>
-            Reset
+            {content.reset}
           </button>
           <div className="flex flex-col gap-6 items-center w-72 m-auto">
             <input
-              placeholder="Client name"
+              placeholder={content.client_name}
               className="input input-bordered w-full max-w-xs"
               value={newOrder.client_name}
               onChange={handleInputChange}
@@ -120,7 +123,7 @@ const CreateOrder = (): ReactElement => {
               name="clientId"
             >
               <option value="" selected disabled>
-                Choose client
+                {content.choose_client}
               </option>
               {clients &&
                 clients.length &&
@@ -130,18 +133,18 @@ const CreateOrder = (): ReactElement => {
                   </option>
                 ))}
             </select>
-            <label className="text-left w-full text-sm">Weight</label>
+            <label className="text-left w-full text-sm">{content.weight}</label>
             <input
-              placeholder="Weight"
+              placeholder={content.weight}
               className="input input-bordered w-full max-w-xs"
               value={newOrder.weight}
               onChange={handleInputChange}
               type="number"
               name="weight"
             />
-            <label className="text-left w-full text-sm">Price</label>
+            <label className="text-left w-full text-sm">{content.price}</label>
             <input
-              placeholder="Price"
+              placeholder={content.price}
               className="input input-bordered w-full max-w-xs"
               value={newOrder.price}
               onChange={handleInputChange}
@@ -156,13 +159,13 @@ const CreateOrder = (): ReactElement => {
               defaultValue={newOrder.type}
             >
               <option value={newOrder.type} disabled>
-                Choose type
+                {content.choose_type}
               </option>
               <option value={'coloring'}>صباغة</option>
               <option value={'cleaning'}>تنظيف</option>
             </select>
             <input
-              placeholder="Order Color"
+              placeholder={content.color}
               className="input input-bordered w-full max-w-xs"
               value={newOrder.color}
               onChange={handleInputChange}
@@ -178,13 +181,13 @@ const CreateOrder = (): ReactElement => {
             />
             <textarea
               className="textarea textarea-bordered w-full"
-              placeholder="Notes"
+              placeholder={content.notes}
               name="notes"
               value={newOrder.notes}
               onChange={handleInputChange}
             ></textarea>
             <button className="btn btn-primary w-full" onClick={handleSubmit}>
-              Create
+              {content.create}
             </button>
 
             {/* {errors && errors.length && (

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import channels from '@shared/constants/channels'
 import { PageHeader } from '@renderer/components/pageHeader'
 import Breadcrumps from '@renderer/components/Breadcrumps/Breadcrumps'
+import getTranslation from '@renderer/utils/getTranslation'
 
 const CreateClient = (): ReactElement => {
   const api = useContext(AppContext)
@@ -11,6 +12,8 @@ const CreateClient = (): ReactElement => {
   const navigate = useNavigate()
 
   const chn = channels
+
+  const content = getTranslation()
 
   const [name, setName] = useState<string>('')
 
@@ -28,10 +31,10 @@ const CreateClient = (): ReactElement => {
   return (
     <>
       <div className="p-6">
-        <Breadcrumps path="/client/list">Back to list</Breadcrumps>
+        <Breadcrumps path="/client/list">{content.back_to_list}</Breadcrumps>
 
         <PageHeader>
-          <h1 className="dark:text-white">Create Client</h1>
+          <h1 className="dark:text-white">{content.create_client}</h1>
         </PageHeader>
 
         <div className="page-content p-6 bg-white  dark:bg-slate-950 rounded-md">
@@ -45,7 +48,7 @@ const CreateClient = (): ReactElement => {
               name="name"
             />
             <button className="btn btn-primary" onClick={handleSubmit}>
-              Create
+              {content.create}
             </button>
           </div>
         </div>
