@@ -10,6 +10,8 @@ import { OrderCreate, OrderDelete, OrderListRead, OrderUpdate } from './services
 import ClientOrdersRead from './services/clients/ClientOrdersRead'
 import GenerateTiquetPDF from './services/tiquet/GenerateTiquetPDF'
 import { DashboardReportRead } from './services/dashboard'
+import 'dotenv/config'
+import { verifyLicence } from './services/licensing/MacAddressLicence'
 
 function createWindow(): void {
   // Create the browser window.
@@ -19,12 +21,6 @@ function createWindow(): void {
     show: false,
     center: true,
     title: 'Store',
-    // frame: false,
-    // vibrancy: 'under-window',
-    // visualEffectState: 'active',
-    // autoHideMenuBar: true,
-    // titleBarStyle: 'hidden',
-    // trafficLightPosition: { x: 15, y: 10 },
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
@@ -99,6 +95,7 @@ app.whenReady().then(() => {
 
   ipcMain.on(channels.PrintTiquetPdf, async (event, args) => GenerateTiquetPDF(event, args))
 
+  console.log('======= LICENCE VERFIFIED ============', verifyLicence())
   createWindow()
 
   app.on('activate', function () {

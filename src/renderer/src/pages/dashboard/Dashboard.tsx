@@ -16,8 +16,6 @@ const Dashboard = (): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(false)
   const [numberOfClients, setNumberOfClients] = useState<number>(0)
   const [numberOfOrders, setNumberOfOrders] = useState<number>(0)
-  // const [numberOfOrders, setNumberOfOrders] = useState<number>(0)
-  // const [numberOfOrders, setNumberOfOrders] = useState<number>(0)
 
   const [reports, setReports] = useState<IDashboardReport | null>(null)
 
@@ -29,8 +27,6 @@ const Dashboard = (): JSX.Element => {
         setNumberOfClients(data.numberOfClient)
         setNumberOfOrders(data.numberOfOrders)
         setLoading(false)
-        // setResponse(data)
-        // setLoading(false)
       })
     }
   }
@@ -40,8 +36,9 @@ const Dashboard = (): JSX.Element => {
     fetchDashboardReport()
   }, [])
 
-  console.log('========== DASHBOARD REPORT =======', reports)
-
+  if (!content) {
+    return <LoadingSpinner />
+  }
   return (
     <div className="flex flex-col gap-8">
       {loading ? (
