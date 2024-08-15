@@ -4,11 +4,13 @@ import { Layout } from './components/layout/layout'
 import Routes from './Routes'
 import { useEffect, useState } from 'react'
 import { LanguageContext } from './contexts/LanguageContext'
+import { Intro } from './pages/intro'
 
 function App(): JSX.Element {
   const api = window.api
   const [lang, setLang] = useState(localStorage.getItem('lang'))
 
+  // Language management
   useEffect(() => {
     const lang = localStorage.getItem('lang')
     if (lang) {
@@ -18,8 +20,10 @@ function App(): JSX.Element {
       setLang('en')
     }
   }, [])
+
   return (
-    <>
+    <div className="relative">
+      <Intro />
       <Router>
         <AppContext.Provider value={api}>
           <LanguageContext.Provider value={{ lang, setLang }}>
@@ -29,7 +33,9 @@ function App(): JSX.Element {
           </LanguageContext.Provider>
         </AppContext.Provider>
       </Router>
-    </>
+
+      <Intro />
+    </div>
   )
 }
 
