@@ -1,20 +1,47 @@
 import os from 'os'
 import crypto from 'crypto'
-import { app, dialog } from 'electron'
+import { setupDatabase } from '../../config/DBconfig'
+import { v4 as uuidv4 } from 'uuid'
 
 interface IMacAddress {
   providedAddress: string
   currentAddress: string
 }
+const db = setupDatabase()
 
-export const checkLicenseKey = (): void => {
-  // Get Licence Key from Storage
-  // const licenseKey = store.get('licenseKey') as string
-  const licenseKey = null // Get Licence Key from Storage
-  if (!licenseKey) {
-    promptForLicenseKey()
+export const ValidateLicenceKey = async (): Promise<boolean> => {
+  const getLicenseQuery = `SELECT * FROM licenses`
+
+  const getLicenseStmt = db.prepare(getLicenseQuery)
+  const result = getLicenseStmt.get()
+  const licenseKey = result ? result.license_key : ''
+
+  // Check if License Key exists in DB
+  if (!licenseKey || licenseKey === undefined) {
+    return false
   } else {
-    validateLicenseKey(licenseKey)
+    // Check if Existing License Key is valid against current MAC Address
+    const isValid = verifyLicenseKey(licenseKey)
+    if (isValid) {
+      return true
+    } else {
+      return false
+    }
+  }
+}
+
+export const PromptLicenseKey = async (licenseKey: string): Promise<boolean> => {
+  const isValid = verifyLicenseKey(licenseKey)
+  if (isValid) {
+    // Store it in DB or Secure Storage
+    const storeLicenseQuery = `INSERT INTO licenses (id, license_key, createdAt, updatedAt) VALUES (?, ?, ?, ?)`
+
+    const stmt = await db.prepare(storeLicenseQuery)
+    await stmt.run(uuidv4(), licenseKey, new Date().toISOString(), new Date().toISOString())
+    return true
+  } else {
+    // Return false to quit the app
+    return false
   }
 }
 
@@ -41,7 +68,7 @@ export const Get_MAC_ADDRESS = (): IMacAddress | null => {
   }
   const interfaces = os.networkInterfaces()
   if (process.platform === 'darwin') {
-    MacAddresses.providedAddress = process.env['VITE_MAC_ADDRESS_MACOS']!
+    MacAddresses.providedAddress = import.meta.env.VITE_MAC_ADDRESS_MACOS
     const ethernetInterfaceNames = ['eth', 'en', 'Ethernet']
     for (const interfaceName in interfaces) {
       const networkInterface = interfaces[interfaceName]
@@ -58,7 +85,7 @@ export const Get_MAC_ADDRESS = (): IMacAddress | null => {
     return MacAddresses
   }
   if (process.platform === 'win32') {
-    MacAddresses.providedAddress = process.env['VITE_MAC_ADDRESS_WINDOWS']!
+    MacAddresses.providedAddress = import.meta.env.VITE_MAC_ADDRESS_WINDOWS
     let macAddress: string | null = null
 
     for (const interfaceName in interfaces) {
@@ -84,45 +111,16 @@ export const Get_MAC_ADDRESS = (): IMacAddress | null => {
 
 /*
 /*
-/ Prompt the user for entering a Licence key if not exists in the storage
-/*
-/** */
-
-const promptForLicenseKey = (): void => {
-  // const licenseKey = dialog.showMessageBoxSync({
-  //   message: 'Please enter your license key:',
-  //   title: 'License Key Required'
-  // })
-  const licenseKey = ''
-
-  if (licenseKey) {
-    const isValid = validateLicenseKey(licenseKey)
-    if (isValid) {
-      // store.set('licenseKey', licenseKey)
-    } else {
-      dialog.showErrorBox(
-        'Invalid License Key',
-        'The license key you entered is invalid. The application will now exit.'
-      )
-      app.quit()
-    }
-  } else {
-    app.quit()
-  }
-}
-
-/*
-/*
 / Validate and compare the Entered License Key if it matches a generated key
 / using current machine MAC address
 /*
 /** */
 
-const validateLicenseKey = (licenseKey: string): boolean => {
+export const verifyLicenseKey = (licenseKey: string): boolean => {
   const getMacAddresses = Get_MAC_ADDRESS()
-  const secretKey = process.env['VITE_LICENCE_KEY_SECRET']
+  const secretKey = import.meta.env.VITE_LICENCE_KEY_SECRET
 
-  const expectedKey = generateLicenseKey(getMacAddresses?.currentAddress, secretKey)
+  const expectedKey = generateLicenseKey(getMacAddresses?.providedAddress, secretKey)
 
   return expectedKey === licenseKey
 }

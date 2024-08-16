@@ -11,7 +11,7 @@ import ClientOrdersRead from './services/clients/ClientOrdersRead'
 import GenerateTiquetPDF from './services/tiquet/GenerateTiquetPDF'
 import { DashboardReportRead } from './services/dashboard'
 import 'dotenv/config'
-// import { checkLicenseKey } from './services/licensing/MacAddressLicence'
+import { PromptLicenseKey, ValidateLicenceKey } from './services/license/MacAddressLicence'
 
 function createWindow(): void {
   // Create the browser window.
@@ -20,7 +20,7 @@ function createWindow(): void {
     height: 600,
     show: false,
     center: true,
-    title: 'Store',
+    title: import.meta.env.VITE_APP_NAME,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
@@ -55,8 +55,6 @@ setupTables()
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
-  // Check User's License validity
-  // checkLicenseKey()
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 
@@ -98,8 +96,26 @@ app.whenReady().then(async () => {
   ipcMain.on(channels.PrintTiquetPdf, async (event, args) => GenerateTiquetPDF(event, args))
 
   /*
-  / Input Dialogs
+  / Licence Key Checks
   /** */
+
+  ipcMain.on(channels.LicenseVerifyRequest, async (event) => {
+    const isValidated = await ValidateLicenceKey()
+    if (!isValidated) {
+      event.reply(channels.LicenseVerifyResponse, false) // Set TRUE for permanent validation
+    } else {
+      event.reply(channels.LicenseVerifyResponse, true)
+    }
+  })
+
+  ipcMain.on(channels.LicenseKeyRequest, async (event, args) => {
+    const receivedValidLicenseKey = await PromptLicenseKey(args)
+    if (receivedValidLicenseKey) {
+      event.reply(channels.LicenseKeyResponse, { valideKey: true })
+    } else {
+      app.quit()
+    }
+  })
 
   createWindow()
 

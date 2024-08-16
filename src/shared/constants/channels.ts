@@ -17,6 +17,12 @@ const channels = {
   PrintTiquetPdf: 'print:tiquet:pdf',
 
   DashboardReportRequest: 'dashboard:report:request',
-  DashboardReportRespone: 'dashboard:report:response'
+  DashboardReportRespone: 'dashboard:report:response',
+
+  LicenseKeyRequest: 'license:key:request',
+  LicenseKeyResponse: 'license:key:response',
+
+  LicenseVerifyRequest: 'license:verify:request',
+  LicenseVerifyResponse: 'license:verify:response'
 }
 export default channels

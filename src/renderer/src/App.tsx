@@ -5,10 +5,24 @@ import Routes from './Routes'
 import { useEffect, useState } from 'react'
 import { LanguageContext } from './contexts/LanguageContext'
 import { Intro } from './pages/intro'
+import LicenseKeyPrompt from './pages/licenseKeyPrompt/LicenseKeyPrompt'
+import channels from '@shared/constants/channels'
 
 function App(): JSX.Element {
   const api = window.api
   const [lang, setLang] = useState(localStorage.getItem('lang'))
+
+  // License Management
+  const [licenseValidated, setLicenseValidate] = useState(false)
+
+  useEffect(() => {
+    if (api) {
+      api.send(channels.LicenseVerifyRequest)
+      api.receive(channels.LicenseVerifyResponse, (data) => {
+        setLicenseValidate(data)
+      })
+    }
+  }, [])
 
   // Language management
   useEffect(() => {
@@ -23,14 +37,17 @@ function App(): JSX.Element {
 
   return (
     <div className="relative">
-      <Intro />
       <Router>
         <AppContext.Provider value={api}>
-          <LanguageContext.Provider value={{ lang, setLang }}>
-            <Layout>
-              <Routes />
-            </Layout>
-          </LanguageContext.Provider>
+          {!licenseValidated ? (
+            <LicenseKeyPrompt />
+          ) : (
+            <LanguageContext.Provider value={{ lang, setLang }}>
+              <Layout>
+                <Routes />
+              </Layout>
+            </LanguageContext.Provider>
+          )}
         </AppContext.Provider>
       </Router>
 

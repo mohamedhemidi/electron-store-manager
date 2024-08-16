@@ -78,8 +78,6 @@ const CreateOrder = (): ReactElement => {
     fetchClientsList()
   }, [])
 
-  console.log('======= users =========', clients)
-
   const handleClientChangeInput = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     const selectedOption = e.target.selectedOptions[0]
     // handleInputChange(e);
@@ -161,8 +159,8 @@ const CreateOrder = (): ReactElement => {
               <option value={newOrder.type} disabled>
                 {content.choose_type}
               </option>
-              <option value={'coloring'}>صباغة</option>
-              <option value={'cleaning'}>تنظيف</option>
+              <option value={'صباغة'}>صباغة</option>
+              <option value={'تنظيف'}>تنظيف</option>
             </select>
             <input
               placeholder={content.color}

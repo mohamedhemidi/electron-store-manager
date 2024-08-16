@@ -6,7 +6,7 @@ const OrderListRead = async (event, data): Promise<void> => {
   const db = setupDatabase()
   let query = `SELECT * FROM orders`
 
-  if (data.searchValue) {
+  if (data && data.searchValue) {
     query += ` WHERE client_name LIKE '%${data.searchValue}%' OR weight LIKE '%${data.searchValue}%' OR notes LIKE '%${data.searchValue}%'`
   }
 
