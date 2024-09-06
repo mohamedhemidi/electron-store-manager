@@ -5,7 +5,6 @@ import { ValidateLicenceKeyOnline } from '../../utils/OnlineLicense'
 export const VerifyLicense = async (event: Electron.IpcMainEvent): Promise<void> => {
   if (import.meta.env.VITE_LICENSE_METHOD !== 'FREE') {
     let isValidated: boolean
-    // const isValidated = await ValidateLicenceKey()
     switch (import.meta.env.VITE_LICENSE_METHOD) {
       case 'MAC_ADDRESS':
         isValidated = await ValidateLicenceKeyLocal()
@@ -15,7 +14,7 @@ export const VerifyLicense = async (event: Electron.IpcMainEvent): Promise<void>
         break
     }
     if (!isValidated) {
-      event.reply(channels.LicenseVerifyResponse, false) // Set TRUE for permanent validation
+      event.reply(channels.LicenseVerifyResponse, false)
     } else {
       event.reply(channels.LicenseVerifyResponse, true)
     }

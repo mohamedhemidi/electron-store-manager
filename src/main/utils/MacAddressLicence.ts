@@ -67,9 +67,6 @@ export const PromptLicenseKeyLocal = async (licenseKey: string): Promise<boolean
 
     // Local FS storage file:
     // fs.writeFileSync(licenseFilePath, encrypt(licenseKey))
-
-    // Remote DB Online:
-    // TODO:)
     return true
   } else {
     // Return false to quit the app

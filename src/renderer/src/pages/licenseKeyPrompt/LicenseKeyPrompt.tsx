@@ -11,7 +11,6 @@ const LicenseKeyPrompt = (): JSX.Element => {
     if (api) {
       api.send(channels.LicenseKeyRequest, licenseKey)
       api.receive(channels.LicenseKeyResponse, (data: ILicenseResponse) => {
-        console.log(data)
         if (data && data.valideKey === true) {
           window.location.reload()
         }

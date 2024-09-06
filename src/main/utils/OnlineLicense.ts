@@ -10,7 +10,7 @@ export const ValidateLicenceKeyOnline = async (): Promise<boolean> => {
 }
 
 export const PromptLicenseKeyOnline = async (licenseKey: string): Promise<boolean> => {
-  const isValid = false // Online Checking Login =>
+  const isValid = false // Online Checking License =>
   if (isValid) {
     // Store it in DB or Secure Storage Or Online to Remote DB
 
