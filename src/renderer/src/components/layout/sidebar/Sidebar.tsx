@@ -38,7 +38,7 @@ const Sidebar = (): JSX.Element => {
           <h1
             className={`origin-left font-medium text-xl duration-300 dark:text-white text-stone-900 ${!open && 'scale-0'}`}
           >
-            Store
+            {import.meta.env.VITE_APP_NAME}
           </h1>
         </div>
         <ul className="pt-6">

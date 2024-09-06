@@ -11,7 +11,8 @@ import ClientOrdersRead from './services/clients/ClientOrdersRead'
 import GenerateTiquetPDF from './services/tiquet/GenerateTiquetPDF'
 import { DashboardReportRead } from './services/dashboard'
 import 'dotenv/config'
-import { PromptLicenseKey, ValidateLicenceKey } from './services/license/MacAddressLicence'
+import { PromptLicenseKey } from './utils/MacAddressLicence'
+import { VerifyLicense } from './services/license/VerifyLicence'
 
 function createWindow(): void {
   // Create the browser window.
@@ -99,14 +100,7 @@ app.whenReady().then(async () => {
   / Licence Key Checks
   /** */
 
-  ipcMain.on(channels.LicenseVerifyRequest, async (event) => {
-    const isValidated = await ValidateLicenceKey()
-    if (!isValidated) {
-      event.reply(channels.LicenseVerifyResponse, false) // Set TRUE for permanent validation
-    } else {
-      event.reply(channels.LicenseVerifyResponse, true)
-    }
-  })
+  ipcMain.on(channels.LicenseVerifyRequest, async (event) => VerifyLicense(event))
 
   ipcMain.on(channels.LicenseKeyRequest, async (event, args) => {
     const receivedValidLicenseKey = await PromptLicenseKey(args)

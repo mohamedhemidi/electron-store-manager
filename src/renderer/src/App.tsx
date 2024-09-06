@@ -18,7 +18,7 @@ function App(): JSX.Element {
   useEffect(() => {
     if (api) {
       api.send(channels.LicenseVerifyRequest)
-      api.receive(channels.LicenseVerifyResponse, (data) => {
+      api.receive(channels.LicenseVerifyResponse, (data: boolean) => {
         setLicenseValidate(data)
       })
     }

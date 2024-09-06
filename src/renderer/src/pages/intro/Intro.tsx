@@ -19,10 +19,10 @@ const Intro = (): JSX.Element => {
       <div className="intro-container flex flex-col p-2 justify-center items-center gap-8">
         <img id="intro-logo" className="w-32 h-32" src={LogoIcon} />
         <h1 id="intro-title" className="text-4xl">
-          Store Manager
+          {import.meta.env.VITE_APP_NAME}
         </h1>
         <h1 id="intro-version" className="text-xl">
-          V 1.0.0
+          V {import.meta.env.VITE_APP_VERSION}
         </h1>
       </div>
     </div>

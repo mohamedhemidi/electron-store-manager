@@ -1,6 +1,6 @@
 import os from 'os'
 import crypto from 'crypto'
-import { setupDatabase } from '../../config/DBconfig'
+import { setupDatabase } from '../config/DBconfig'
 import { v4 as uuidv4 } from 'uuid'
 
 interface IMacAddress {
@@ -9,7 +9,7 @@ interface IMacAddress {
 }
 const db = setupDatabase()
 
-export const ValidateLicenceKey = async (): Promise<boolean> => {
+export const ValidateLicenceKeyLocal = async (): Promise<boolean> => {
   const getLicenseQuery = `SELECT * FROM licenses`
 
   const getLicenseStmt = db.prepare(getLicenseQuery)
@@ -21,7 +21,7 @@ export const ValidateLicenceKey = async (): Promise<boolean> => {
     return false
   } else {
     // Check if Existing License Key is valid against current MAC Address
-    const isValid = verifyLicenseKey(licenseKey)
+    const isValid = await verifyLicenseKey(licenseKey)
     if (isValid) {
       return true
     } else {
@@ -31,7 +31,7 @@ export const ValidateLicenceKey = async (): Promise<boolean> => {
 }
 
 export const PromptLicenseKey = async (licenseKey: string): Promise<boolean> => {
-  const isValid = verifyLicenseKey(licenseKey)
+  const isValid = await verifyLicenseKey(licenseKey)
   if (isValid) {
     // Store it in DB or Secure Storage
     const storeLicenseQuery = `INSERT INTO licenses (id, license_key, createdAt, updatedAt) VALUES (?, ?, ?, ?)`
@@ -51,7 +51,7 @@ export const PromptLicenseKey = async (licenseKey: string): Promise<boolean> => 
 /*
 /** */
 
-export const generateLicenseKey = (macAddress, secretKey): string => {
+export const generateLicenseKey = (macAddress: string, secretKey: string): string => {
   const hash = crypto.createHmac('sha256', secretKey).update(macAddress).digest('hex')
   return hash
 }
@@ -63,12 +63,11 @@ export const generateLicenseKey = (macAddress, secretKey): string => {
 /** */
 export const Get_MAC_ADDRESS = (): IMacAddress | null => {
   const MacAddresses = {
-    providedAddress: '',
+    providedAddress: import.meta.env.VITE_MAC_ADDRESS,
     currentAddress: ''
   }
   const interfaces = os.networkInterfaces()
   if (process.platform === 'darwin') {
-    MacAddresses.providedAddress = import.meta.env.VITE_MAC_ADDRESS_MACOS
     const ethernetInterfaceNames = ['eth', 'en', 'Ethernet']
     for (const interfaceName in interfaces) {
       const networkInterface = interfaces[interfaceName]
@@ -85,7 +84,6 @@ export const Get_MAC_ADDRESS = (): IMacAddress | null => {
     return MacAddresses
   }
   if (process.platform === 'win32') {
-    MacAddresses.providedAddress = import.meta.env.VITE_MAC_ADDRESS_WINDOWS
     let macAddress: string | null = null
 
     for (const interfaceName in interfaces) {
@@ -116,11 +114,14 @@ export const Get_MAC_ADDRESS = (): IMacAddress | null => {
 /*
 /** */
 
-export const verifyLicenseKey = (licenseKey: string): boolean => {
+export const verifyLicenseKey = async (licenseKey: string): Promise<boolean> => {
   const getMacAddresses = Get_MAC_ADDRESS()
-  const secretKey = import.meta.env.VITE_LICENCE_KEY_SECRET
+  const secretKey = import.meta.env.VITE_LICENSE_KEY_SECRET
 
-  const expectedKey = generateLicenseKey(getMacAddresses?.providedAddress, secretKey)
-
-  return expectedKey === licenseKey
+  if (getMacAddresses && getMacAddresses?.currentAddress) {
+    const expectedKey = generateLicenseKey(getMacAddresses?.currentAddress, secretKey)
+    return expectedKey === licenseKey
+  } else {
+    return false
+  }
 }

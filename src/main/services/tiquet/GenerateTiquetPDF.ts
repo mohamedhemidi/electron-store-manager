@@ -1,8 +1,8 @@
 import { dialog } from 'electron'
 import { jsPDF } from 'jspdf'
 import moment from 'moment'
-import { AmiriFont } from './amiriFont'
-const GenerateTiquetPDF = async (event, args): Promise<void> => {
+import { AmiriFont } from '../../assets/amiriFont'
+const GenerateTiquetPDF = async (_event, args): Promise<void> => {
   const doc = new jsPDF({
     unit: 'mm',
     format: [80, 90] // Custom width for receipt-like layout
