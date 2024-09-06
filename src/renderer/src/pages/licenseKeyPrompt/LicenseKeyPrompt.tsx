@@ -31,7 +31,7 @@ const LicenseKeyPrompt = (): JSX.Element => {
           name="license_key"
         />
         <button className="btn btn-primary" onClick={handleSendLicenseKey}>
-          Submit
+          Activate
         </button>
       </div>
     </div>
