@@ -9,12 +9,36 @@ interface IMacAddress {
 }
 const db = setupDatabase()
 
+// FS Local Storage :
+//
+// const algorithm = 'aes-256-cbc'
+// const key = crypto.scryptSync('secret-key', 'salt', 32)
+// const iv = crypto.randomBytes(16)
+// const licenseFilePath = path.join(app.getPath('userData'), 'license.dat')
+
+// function encrypt(text): string {
+//   const cipher = crypto.createCipheriv(algorithm, key, iv)
+//   let encrypted = cipher.update(text, 'utf8', 'hex')
+//   encrypted += cipher.final('hex')
+//   return iv.toString('hex') + ':' + encrypted
+// }
+
+// function decrypt(encrypted): string {
+//   const [iv, content] = encrypted.split(':')
+//   const decipher = crypto.createDecipheriv(algorithm, key, Buffer.from(iv, 'hex'))
+//   let decrypted = decipher.update(content, 'hex', 'utf8')
+//   decrypted += decipher.final('utf8')
+//   return decrypted
+// }
+
 export const ValidateLicenceKeyLocal = async (): Promise<boolean> => {
   const getLicenseQuery = `SELECT * FROM licenses`
 
   const getLicenseStmt = db.prepare(getLicenseQuery)
   const result = getLicenseStmt.get()
   const licenseKey = result ? result.license_key : ''
+
+  // const licenseKey = decrypt(fs.readFileSync(licenseFilePath, 'utf8'))
 
   // Check if License Key exists in DB
   if (!licenseKey || licenseKey === undefined) {
@@ -38,6 +62,8 @@ export const PromptLicenseKey = async (licenseKey: string): Promise<boolean> => 
 
     const stmt = await db.prepare(storeLicenseQuery)
     await stmt.run(uuidv4(), licenseKey, new Date().toISOString(), new Date().toISOString())
+
+    // fs.writeFileSync(licenseFilePath, encrypt(licenseKey))
     return true
   } else {
     // Return false to quit the app
