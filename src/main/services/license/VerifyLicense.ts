@@ -1,9 +1,9 @@
 import channels from '@shared/constants/channels'
 import { ValidateLicenceKeyLocal } from '../../utils/MacAddressLicence'
-import { ValidateLicenceKeyOnline } from './OnlineLicense'
+import { ValidateLicenceKeyOnline } from '../../utils/OnlineLicense'
 
 export const VerifyLicense = async (event: Electron.IpcMainEvent): Promise<void> => {
-  if (import.meta.env.VITE_LICENSE_METHOD !== 'OPEN') {
+  if (import.meta.env.VITE_LICENSE_METHOD !== 'FREE') {
     let isValidated: boolean
     // const isValidated = await ValidateLicenceKey()
     switch (import.meta.env.VITE_LICENSE_METHOD) {

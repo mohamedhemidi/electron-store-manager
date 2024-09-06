@@ -3,7 +3,7 @@ interface ImportMetaEnv {
   readonly VITE_APP_VERSION: number
   readonly VITE_LICENSE_KEY_SECRET: string
   readonly VITE_MAC_ADDRESS: string
-  readonly VITE_LICENSE_METHOD: 'MAC_ADDRESS' | 'ONLINE' | 'OPEN'
+  readonly VITE_LICENSE_METHOD: 'MAC_ADDRESS' | 'ONLINE' | 'FREE'
 }
 
 interface ImportMeta {

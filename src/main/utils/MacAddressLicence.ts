@@ -54,16 +54,22 @@ export const ValidateLicenceKeyLocal = async (): Promise<boolean> => {
   }
 }
 
-export const PromptLicenseKey = async (licenseKey: string): Promise<boolean> => {
+export const PromptLicenseKeyLocal = async (licenseKey: string): Promise<boolean> => {
   const isValid = await verifyLicenseKey(licenseKey)
   if (isValid) {
-    // Store it in DB or Secure Storage
+    // Store it in DB or Secure Storage Or Online to Remote DB
+
+    // Local SqliteDB:
     const storeLicenseQuery = `INSERT INTO licenses (id, license_key, createdAt, updatedAt) VALUES (?, ?, ?, ?)`
 
     const stmt = await db.prepare(storeLicenseQuery)
     await stmt.run(uuidv4(), licenseKey, new Date().toISOString(), new Date().toISOString())
 
+    // Local FS storage file:
     // fs.writeFileSync(licenseFilePath, encrypt(licenseKey))
+
+    // Remote DB Online:
+    // TODO:)
     return true
   } else {
     // Return false to quit the app

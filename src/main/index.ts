@@ -10,9 +10,10 @@ import { OrderCreate, OrderDelete, OrderListRead, OrderUpdate } from './services
 import ClientOrdersRead from './services/clients/ClientOrdersRead'
 import GenerateTiquetPDF from './services/tiquet/GenerateTiquetPDF'
 import { DashboardReportRead } from './services/dashboard'
+import { PromptLicenseKeyLocal } from './utils/MacAddressLicence'
+import { VerifyLicense } from './services/license/VerifyLicense'
+import { PromptLicenseKeyOnline } from './utils/OnlineLicense'
 import 'dotenv/config'
-import { PromptLicenseKey } from './utils/MacAddressLicence'
-import { VerifyLicense } from './services/license/VerifyLicence'
 
 function createWindow(): void {
   // Create the browser window.
@@ -103,8 +104,16 @@ app.whenReady().then(async () => {
   ipcMain.on(channels.LicenseVerifyRequest, async (event) => VerifyLicense(event))
 
   ipcMain.on(channels.LicenseKeyRequest, async (event, args) => {
-    const receivedValidLicenseKey = await PromptLicenseKey(args)
-    if (receivedValidLicenseKey) {
+    let validLicenseKey: boolean = false
+    switch (import.meta.env.VITE_LICENSE_METHOD) {
+      case 'MAC_ADDRESS':
+        validLicenseKey = await PromptLicenseKeyLocal(args)
+        break
+      case 'ONLINE':
+        validLicenseKey = await PromptLicenseKeyOnline(args)
+        break
+    }
+    if (validLicenseKey) {
       event.reply(channels.LicenseKeyResponse, { valideKey: true })
     } else {
       app.quit()
