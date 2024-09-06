@@ -14,7 +14,7 @@ const db = setupDatabase()
 // const algorithm = 'aes-256-cbc'
 // const key = crypto.scryptSync('secret-key', 'salt', 32)
 // const iv = crypto.randomBytes(16)
-// const licenseFilePath = path.join(app.getPath('userData'), 'license.dat')
+// const licenseFilePath = path.join(app.getPath('documents'), 'license.dat')
 
 // function encrypt(text): string {
 //   const cipher = crypto.createCipheriv(algorithm, key, iv)
