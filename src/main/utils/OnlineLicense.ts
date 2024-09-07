@@ -31,3 +31,9 @@ export const PromptLicenseKeyOnline = async (licenseKey: string): Promise<boolea
     return false
   }
 }
+
+// Generate License Key for Online Remote DB:
+//TODO:)
+
+// Verify if License Key is valide against remote DB license key
+//TODO:)

@@ -18,10 +18,11 @@ function App(): JSX.Element {
   useEffect(() => {
     if (api) {
       api.send(channels.LicenseVerifyRequest)
-      api.receive(channels.LicenseVerifyResponse, (data: boolean) => {
+      api.receive(channels.LICENSE_VERIFY_RESPONSE, (data: boolean) => {
         setLicenseValidate(data)
       })
     }
+    // Interval for each 3 days
   }, [])
 
   // Language management

@@ -32,6 +32,8 @@ const db = setupDatabase()
 // }
 
 export const ValidateLicenceKeyLocal = async (): Promise<boolean> => {
+  // Check if License Key exists in DB
+
   const getLicenseQuery = `SELECT * FROM licenses`
 
   const getLicenseStmt = db.prepare(getLicenseQuery)
@@ -40,7 +42,6 @@ export const ValidateLicenceKeyLocal = async (): Promise<boolean> => {
 
   // const licenseKey = decrypt(fs.readFileSync(licenseFilePath, 'utf8'))
 
-  // Check if License Key exists in DB
   if (!licenseKey || licenseKey === undefined) {
     return false
   } else {

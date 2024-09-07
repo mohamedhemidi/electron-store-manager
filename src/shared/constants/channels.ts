@@ -23,6 +23,6 @@ const channels = {
   LicenseKeyResponse: 'license:key:response',
 
   LicenseVerifyRequest: 'license:verify:request',
-  LicenseVerifyResponse: 'license:verify:response'
+  LICENSE_VERIFY_RESPONSE: 'license:verify:response'
 }
 export default channels

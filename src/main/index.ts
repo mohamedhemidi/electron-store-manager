@@ -10,9 +10,8 @@ import { OrderCreate, OrderDelete, OrderListRead, OrderUpdate } from './services
 import ClientOrdersRead from './services/clients/ClientOrdersRead'
 import GenerateTiquetPDF from './services/tiquet/GenerateTiquetPDF'
 import { DashboardReportRead } from './services/dashboard'
-import { PromptLicenseKeyLocal } from './utils/MacAddressLicence'
 import { VerifyLicense } from './services/license/VerifyLicense'
-import { PromptLicenseKeyOnline } from './utils/OnlineLicense'
+import { PromptLicense } from './services/license/PromptLicense'
 import 'dotenv/config'
 
 function createWindow(): void {
@@ -103,22 +102,7 @@ app.whenReady().then(async () => {
 
   ipcMain.on(channels.LicenseVerifyRequest, async (event) => VerifyLicense(event))
 
-  ipcMain.on(channels.LicenseKeyRequest, async (event, args) => {
-    let validLicenseKey: boolean = false
-    switch (import.meta.env.VITE_LICENSE_METHOD) {
-      case 'MAC_ADDRESS':
-        validLicenseKey = await PromptLicenseKeyLocal(args)
-        break
-      case 'ONLINE':
-        validLicenseKey = await PromptLicenseKeyOnline(args)
-        break
-    }
-    if (validLicenseKey) {
-      event.reply(channels.LicenseKeyResponse, { valideKey: true })
-    } else {
-      app.quit()
-    }
-  })
+  ipcMain.on(channels.LicenseKeyRequest, async (event, args) => PromptLicense(event, args))
 
   createWindow()
 

@@ -14,11 +14,11 @@ export const VerifyLicense = async (event: Electron.IpcMainEvent): Promise<void>
         break
     }
     if (!isValidated) {
-      event.reply(channels.LicenseVerifyResponse, false)
+      event.reply(channels.LICENSE_VERIFY_RESPONSE, false)
     } else {
-      event.reply(channels.LicenseVerifyResponse, true)
+      event.reply(channels.LICENSE_VERIFY_RESPONSE, true)
     }
   } else {
-    event.reply(channels.LicenseVerifyResponse, true)
+    event.reply(channels.LICENSE_VERIFY_RESPONSE, true)
   }
 }
