@@ -139,7 +139,7 @@ export const Get_MAC_ADDRESS = (): IMacAddress | null => {
 
 /*
 /*
-/ Validate and compare the Entered License Key if it matches a generated key
+/ Verify and compare the Entered License Key if it matches a generated key
 / using current machine MAC address
 /*
 /** */

@@ -4,6 +4,9 @@
   "description": "A store managmement software",
   "main": "./out/main/index.js",
   "author": "HMB",
+  "engines": {
+    "node": "20.10.0"
+  },
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
